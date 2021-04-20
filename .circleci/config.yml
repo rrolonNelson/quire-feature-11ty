@@ -9,7 +9,7 @@ anchors:
     docker:
       - image: circleci/buildpack-deps:trusty
         user: root
-  - &npm_cache_key dependency-cache-{{ .Branch }}-{{ checksum "package-lock.json" }}
+  - &npm_cache_key dep-cache-{{ .Branch }}-{{ checksum "package-lock.json" }}
 
 jobs:
   checkout:
@@ -54,9 +54,7 @@ jobs:
       - save_cache:
           key: *npm_cache_key
           paths:
-            - node_modules
             - ~/.npm
-            - ~/.cache
   build:
     <<: *docker_image
     steps:
