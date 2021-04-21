@@ -78,9 +78,6 @@ jobs:
     steps:
       - *attach_workspace
       - node/install
-      # - add_ssh_keys:
-      #     fingerprints:
-      #       - "8a:6d:63:75:61:e8:02:ec:0b:e6:75:58:ab:d1:01:cd"
       - run:
           name: Add test report directory
           command: mkdir -p ~/test-results
