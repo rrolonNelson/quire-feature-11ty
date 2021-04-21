@@ -54,6 +54,9 @@ jobs:
             rm /tmp/pandoc.deb
       # - run: 
       #     name: [todo] install kindle previewer
+      - persist_to_workspace:
+          root: *workspace_root
+          paths: .
   build_install_cli:
     <<: *docker_image
     steps:
