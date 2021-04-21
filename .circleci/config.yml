@@ -26,7 +26,6 @@ jobs:
     <<: *docker_image
     steps:
       - *attach_workspace
-      - node/install
       - run:
           name: Add temporary download directory
           command: mkdir -p /tmp
@@ -51,6 +50,7 @@ jobs:
     <<: *docker_image
     steps:
       - *attach_workspace
+      - node/install
       # - restore_cache:
       #     keys:
       #       - *npm_cache_key
@@ -70,6 +70,7 @@ jobs:
     <<: *docker_image
     steps:
       - *attach_workspace
+      - node/install
       - run:
           name: Add test report directory
           command: mkdir -p ~/test-results
