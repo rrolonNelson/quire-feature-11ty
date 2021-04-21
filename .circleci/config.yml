@@ -54,7 +54,7 @@ jobs:
             rm /tmp/pandoc.deb
       # - run: 
       #     name: [todo] install kindle previewer
-  build_install:
+  build_install_cli:
     <<: *docker_image
     steps:
       - *attach_workspace
@@ -93,9 +93,9 @@ workflows:
       - install_dependencies:
           requires: 
             - checkout
-      - build:
+      - build_install_cli:
           requires:
             - install_dependencies
       - test:
           requires:
-            - build
+            - build_install_cli
