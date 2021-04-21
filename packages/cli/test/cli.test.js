@@ -9,6 +9,7 @@ const quire = new CLI();
 
 // static names and paths for quire test
 const sandboxDir = tmp.dirSync({
+  name: 'test',
   unsafeCleanup: true
 });
 const projectName = "quire-starter";
@@ -28,7 +29,6 @@ const CONFIG = {
 
 describe("CLI", () => {
   process.chdir(sandboxDir.name);
-  console.log(sandboxDir.name);
 
   test(
     "no arguments on quire command should out put help",
@@ -57,7 +57,7 @@ describe("CLI", () => {
   xtest(
     "should successfully install node modules in a starter project theme",
     async done => {
-      // await quire.install();
+      await quire.install();
       assert.equal(
         fs.existsSync(path.join(CONFIG.THEME_PATH, "node_modules")),
         true
@@ -67,7 +67,7 @@ describe("CLI", () => {
     timeout
   );
 
-  xtest(
+  test(
     "should successfully build a static site",
     async done => {
       await quire.site();
