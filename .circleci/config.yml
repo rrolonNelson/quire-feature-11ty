@@ -42,6 +42,7 @@ jobs:
             rm /tmp/pandoc.deb
       - persist_to_workspace:
           root: *workspace_root
+          # todo - specify paths
           paths: .
       # - run: 
       #     name: [todo] install kindle previewer
@@ -64,6 +65,7 @@ jobs:
           command: cd packages/cli && npm install -g
       - persist_to_workspace:
           root: *workspace_root
+          # todo - specify paths
           paths: .
       # - save_cache:
       #     key: *npm_cache_key
