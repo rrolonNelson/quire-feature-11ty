@@ -66,10 +66,10 @@ jobs:
           paths: .
       # - save_cache:
       #     key: *npm_cache_key
-          paths:
-            - node_modules
-            - ~/.npm
-            - ~/.cache
+          # paths:
+          #   - node_modules
+          #   - ~/.npm
+          #   - ~/.cache
   test:
     <<: *docker_image
     steps:
