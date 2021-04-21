@@ -54,12 +54,18 @@ jobs:
       # - restore_cache:
       #     keys:
       #       - *npm_cache_key
-      - add_ssh_keys:
-          fingerprints:
-            - "8a:6d:63:75:61:e8:02:ec:0b:e6:75:58:ab:d1:01:cd"
       - run:
-          name: Install dependencies, build and install the Quire CLI
-          command: npm run cli:install
+          name: Install CLI dependencies
+          command: cd packages/cli && npm install
+      - run:
+          name: Build CLI
+          command: cd packages/cli && npm run build
+      - run:
+          name: Build CLI
+          command: cd packages/cli && npm install -g
+      - run:
+          name: Install CLI
+          command: npm run build
       - persist_to_workspace:
           root: *workspace_root
           paths: .
@@ -74,6 +80,9 @@ jobs:
     steps:
       - *attach_workspace
       - node/install
+      # - add_ssh_keys:
+      #     fingerprints:
+      #       - "8a:6d:63:75:61:e8:02:ec:0b:e6:75:58:ab:d1:01:cd"
       - run:
           name: Add test report directory
           command: mkdir -p ~/test-results
