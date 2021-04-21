@@ -21,11 +21,10 @@ jobs:
       - checkout
       - persist_to_workspace:
           root: *workspace_root
-          paths: .
+          paths: project
   install_dependencies:
     <<: *docker_image
     steps:
-      - *attach_workspace
       - run:
           name: Add temporary download directory
           command: mkdir -p /tmp
@@ -41,6 +40,9 @@ jobs:
             wget -q -O /tmp/pandoc.deb https://github.com/jgm/pandoc/releases/download/2.7.3/pandoc-2.7.3-1-amd64.deb
             dpkg -i /tmp/pandoc.deb
             rm /tmp/pandoc.deb
+      - persist_to_workspace:
+          root: *workspace_root
+          paths: .
       # - run: 
       #     name: [todo] install kindle previewer
   build_install_cli:
