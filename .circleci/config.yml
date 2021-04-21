@@ -1,5 +1,8 @@
 version: 2.1
 
+orbs:
+  node: circleci/node@4.2.1
+
 anchors:
   - &workspace_root ~/
   - &attach_workspace
@@ -23,16 +26,7 @@ jobs:
     <<: *docker_image
     steps:
       - *attach_workspace
-      - run:
-          name: Install Node and NPM
-          command: |
-            set +e
-            touch $BASH_ENV
-            curl -o- https://raw.githubusercontent.com/creationix/nvm/v0.34.0/install.sh | bash
-            export NVM_DIR="$HOME/.nvm"
-            [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
-            nvm install --lts
-            NODE_DIR=$(dirname $(which node))
+      - node/install
       - run:
           name: Add temporary download directory
           command: mkdir -p /tmp
