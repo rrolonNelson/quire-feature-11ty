@@ -9,6 +9,7 @@ const quire = new CLI();
 
 // static names and paths for quire test
 const sandboxDir = tmp.dirSync({
+  dir: 'test-files',
   unsafeCleanup: true
 });
 const projectName = "quire-starter";
@@ -28,6 +29,7 @@ const CONFIG = {
 
 describe("CLI", () => {
   process.chdir(sandboxDir.name);
+  console.log(sandboxDir.name);
 
   test(
     "no arguments on quire command should out put help",
