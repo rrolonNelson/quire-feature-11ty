@@ -23,9 +23,6 @@ jobs:
     <<: *docker_image
     steps:
       - *attach_workspace
-      # - restore_cache:
-      #     keys:
-      #       - *npm_cache_key
       - run:
           name: Install Node and NPM
           command: |
@@ -35,8 +32,7 @@ jobs:
             export NVM_DIR="$HOME/.nvm"
             [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
             nvm install --lts
-            echo 'export NVM_DIR="$HOME/.nvm"' >> $BASH_ENV
-            echo '[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"' >> $BASH_ENV
+            NODE_DIR=$(dirname $(which node))
       - run:
           name: Add temporary download directory
           command: mkdir -p /tmp
@@ -61,6 +57,9 @@ jobs:
     <<: *docker_image
     steps:
       - *attach_workspace
+      # - restore_cache:
+      #     keys:
+      #       - *npm_cache_key
       - run:
           name: Install dependencies, build and install the Quire CLI
           command: npm run cli:install
