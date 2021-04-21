@@ -227,6 +227,8 @@ class Project extends EventEmitter {
     let stdio = this.verbose ? "inherit" : ["pipe", "pipe", process.stderr];
     let webpackCmd = isWin32() ? `webpack.cmd` : `webpack`;
     let webpackBin = path.join("node_modules", ".bin", webpackCmd);
+    console.log(`cwd: ${process.cwd()}`);
+    console.log(`webpack: ${webpackBin}`);
     return execa(webpackBin, webpackArguments, {
       cwd: path.join("themes", this.theme),
       stdio: stdio
@@ -250,8 +252,7 @@ class Project extends EventEmitter {
 
     let getURL =
       this.getBaseUrl(configs) !== "" ? this.getBaseUrl(configs) : "/";
-    let baseURL =
-      getURL[0] !== undefined &&
+    let baseURL =     getURL[0] !== undefined &&
       getURL[0].baseURL !== " " &&
       getURL[0].baseURL !== ""
         ? getURL[0].baseURL
