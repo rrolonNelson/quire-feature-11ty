@@ -9,7 +9,7 @@ anchors:
     docker:
       - image: circleci/buildpack-deps:trusty
         user: root
-  - &npm_cache_key cache1-{{ .Branch }}-{{ checksum "package-lock.json" }}
+  # - &npm_cache_key cache1-{{ .Branch }}-{{ checksum "package-lock.json" }}
 
 jobs:
   checkout:
@@ -23,11 +23,14 @@ jobs:
     <<: *docker_image
     steps:
       - *attach_workspace
+      # - restore_cache:
+      #     keys:
+      #       - *npm_cache_key
       - run:
           name: Install Node and NPM
           command: |
-            set +e             
-            touch $BASH_ENV  
+            set +e
+            touch $BASH_ENV
             curl -o- https://raw.githubusercontent.com/creationix/nvm/v0.34.0/install.sh | bash
             export NVM_DIR="$HOME/.nvm"
             [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
@@ -51,32 +54,26 @@ jobs:
             rm /tmp/pandoc.deb
       # - run: 
       #     name: [todo] install kindle previewer
-      - save_cache:
-          key: *npm_cache_key
-          paths:
-            - ~/.npm
-            - ~/.nvm
-            - node_modules
-  build:
+  build_install:
     <<: *docker_image
     steps:
       - *attach_workspace
-      - restore_cache:
-          keys:
-            - *npm_cache_key
       - run:
-          name: Build and install the Quire CLI
+          name: Install dependencies, build and install the Quire CLI
           command: npm run cli:install
       - persist_to_workspace:
           root: *workspace_root
           paths: .
+      # - save_cache:
+      #     key: *npm_cache_key
+          paths:
+            - node_modules
+            - ~/.npm
+            - ~/.cache
   test:
     <<: *docker_image
     steps:
       - *attach_workspace
-      - restore_cache:
-          keys:
-            - *npm_cache_key
       - run:
           name: Add test report directory
           command: mkdir -p ~/test-results
