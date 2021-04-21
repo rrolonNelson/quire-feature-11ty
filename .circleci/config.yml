@@ -61,11 +61,8 @@ jobs:
           name: Build CLI
           command: cd packages/cli && npm run build
       - run:
-          name: Build CLI
-          command: cd packages/cli && npm install -g
-      - run:
           name: Install CLI
-          command: npm run build
+          command: cd packages/cli && npm install -g
       - persist_to_workspace:
           root: *workspace_root
           paths: .
@@ -99,11 +96,10 @@ workflows:
   install_build_test:
     jobs:
       - checkout
-      - install_dependencies:
-          requires: 
-            - checkout
+      - install_dependencies
       - build_install_cli:
           requires:
+            - checkout
             - install_dependencies
       - test:
           requires:
