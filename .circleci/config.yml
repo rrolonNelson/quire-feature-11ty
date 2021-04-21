@@ -1,7 +1,7 @@
 version: 2.1
 
 anchors:
-  - &workspace_root ~/project
+  - &workspace_root ~/
   - &attach_workspace
     attach_workspace:
       at: *workspace_root
