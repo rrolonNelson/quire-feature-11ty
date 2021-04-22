@@ -85,7 +85,7 @@ describe("CLI", () => {
     timeout
   );
 
-  xtest(
+  test(
     "should successfully build a epub",
     async done => {
       const testFilePath = path.join("static", "downloads", "test");
@@ -116,7 +116,7 @@ describe("CLI", () => {
     timeout
   );
 
-  xtest(
+  test(
     "should successfully build a pdf",
     async done => {
       const testFilePath = path.join("static", "downloads", "test");
@@ -130,7 +130,7 @@ describe("CLI", () => {
     timeout
   );
 
-  xtest(
+  test(
     "quire imageslice should create 'img/iiif/processed' image directory",
     async done => {
       await quire.process('iiif');
