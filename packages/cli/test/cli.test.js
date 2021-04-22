@@ -46,21 +46,25 @@ describe("CLI", () => {
   test(
     "should successfully create a starter project",
     async done => {
+      console.log("BEGIN: create starter project");
       await quire.create(CONFIG.DEFAULT_PROJECT_NAME);
       assert.equal(fs.existsSync(CONFIG.THEME_PATH), true);
+      console.log("END: create starter project");
       done();
     },
     timeout
   );
 
-  xtest(
+  test(
     "should successfully install node modules in a starter project theme",
     async done => {
+      console.log("BEGIN: should successfully install node modules in a starter project theme");
       await quire.install();
       assert.equal(
         fs.existsSync(path.join(CONFIG.THEME_PATH, "node_modules")),
         true
       );
+      console.log("END: should successfully install node modules in a starter project theme");
       done();
     },
     timeout
@@ -69,11 +73,13 @@ describe("CLI", () => {
   test(
     "should successfully build a static site",
     async done => {
+      console.log("BEGIN: build static site");
       await quire.site();
       assert.equal(
         fs.existsSync(path.join(CONFIG.PROJECT_FOLDER, "site")),
         true
       );
+      console.log("END: build static site");
       done();
     },
     timeout
