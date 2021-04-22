@@ -164,6 +164,8 @@ class Project extends EventEmitter {
     let cwd = path.join("themes", this.theme);
     let webpackCmd = isWin32() ? "webpack.cmd" : "webpack";
     let webpackBin = path.join("node_modules", ".bin", webpackCmd);
+    console.log(`cwd: ${process.cwd()}`);
+    console.log(`webpack: ${webpackBin}`);
     this.emit("info", "Launching preview server");
     let spinner = ora({
       text: "Launching preview server"
