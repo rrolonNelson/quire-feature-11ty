@@ -264,26 +264,19 @@ class Project extends EventEmitter {
       text: "Building theme assets..."
     }).start();
 
-    try {
-      await this.buildTheme(`webpack.config.prod.js`, baseURL);
-      spinner.stopAndPersist({
-        symbol: "✔ ",
-        text: "Assets built"
-      });
-      execFileSync(hugo, ["--config=" + configs.join(",")], {
-        stdio: "inherit"
-      });
-      spinner.succeed("Site built successfully");
-      spinner.succeed(`Files output to: ${this.config.publishDir}`);
-      return new Promise(resolve => {
-        resolve(true);
-      });
-    } catch (error) {
-      return new Promise(reject => {
-        reject(error);
-        this.errorExit(`${error}`, spinner);
-      });
-    }
+    await this.buildTheme(`webpack.config.prod.js`, baseURL);
+    spinner.stopAndPersist({
+      symbol: "✔ ",
+      text: "Assets built"
+    });
+    execFileSync(hugo, ["--config=" + configs.join(",")], {
+      stdio: "inherit"
+    });
+    spinner.succeed("Site built successfully");
+    spinner.succeed(`Files output to: ${this.config.publishDir}`);
+    return new Promise(resolve => {
+      resolve(true);
+    });
   }
 
   /**
