@@ -9,7 +9,6 @@ const quire = new CLI();
 
 // static names and paths for quire test
 const sandboxDir = tmp.dirSync({
-  name: 'test',
   unsafeCleanup: true
 });
 const projectName = "quire-starter";
