@@ -50,7 +50,7 @@ jobs:
     <<: *docker_image
     steps:
       - *attach_workspace
-      - node/install
+      - node/install:
           lts: true
       # - restore_cache:
       #     keys:
@@ -78,7 +78,7 @@ jobs:
     <<: *docker_image
     steps:
       - *attach_workspace
-      - node/install
+      - node/install:
           lts: true
       - run:
           name: Add test report directory
