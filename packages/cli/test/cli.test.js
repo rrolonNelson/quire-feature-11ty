@@ -29,7 +29,7 @@ const CONFIG = {
 describe("CLI", () => {
   process.chdir(sandboxDir.name);
 
-  test(
+  xtest(
     "no arguments on quire command should out put help",
     done => {
       exec("quire", function(error, stdout, stderr) {
@@ -50,6 +50,22 @@ describe("CLI", () => {
       await quire.create(CONFIG.DEFAULT_PROJECT_NAME);
       assert.equal(fs.existsSync(CONFIG.THEME_PATH), true);
       console.log("END: create starter project");
+
+      console.log("BEGIN: should successfully install node modules in a starter project theme");
+      await quire.install();
+      assert.equal(
+        fs.existsSync(path.join(CONFIG.THEME_PATH, "node_modules")),
+        true
+      );
+      console.log("END: should successfully install node modules in a starter project theme");
+
+      console.log("BEGIN: build static site");
+      await quire.site();
+      assert.equal(
+        fs.existsSync(path.join(CONFIG.PROJECT_FOLDER, "site")),
+        true
+      );
+      console.log("END: build static site");
       done();
     },
     timeout
@@ -70,7 +86,7 @@ describe("CLI", () => {
     timeout
   );
 
-  test(
+  xtest(
     "should successfully build a static site",
     async done => {
       console.log("BEGIN: build static site");
@@ -85,7 +101,7 @@ describe("CLI", () => {
     timeout
   );
 
-  test(
+  xtest(
     "should successfully build a epub",
     async done => {
       const testFilePath = path.join("static", "downloads", "test");
@@ -116,7 +132,7 @@ describe("CLI", () => {
     timeout
   );
 
-  test(
+  xtest(
     "should successfully build a pdf",
     async done => {
       const testFilePath = path.join("static", "downloads", "test");
