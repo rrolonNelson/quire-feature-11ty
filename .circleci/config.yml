@@ -51,6 +51,7 @@ jobs:
     steps:
       - *attach_workspace
       - node/install
+          lts: true
       # - restore_cache:
       #     keys:
       #       - *npm_cache_key
@@ -78,12 +79,7 @@ jobs:
     steps:
       - *attach_workspace
       - node/install
-      - run:
-          name: Jest Version
-          command: cd packages/cli && jest --version
-      - run:
-          name: Node Version
-          command: node --version
+          lts: true
       - run:
           name: Add test report directory
           command: mkdir -p ~/test-results
