@@ -14,16 +14,8 @@ anchors:
         user: root
   # - &npm_cache_key cache1-{{ .Branch }}-{{ checksum "package-lock.json" }}
 
-jobs:
-  checkout:
-    <<: *docker_image
-    steps:
-      - checkout
-      - persist_to_workspace:
-          root: *workspace_root
-          paths: project
+commands:
   install_dependencies:
-    <<: *docker_image
     steps:
       - run:
           name: Add temporary download directory
@@ -40,16 +32,14 @@ jobs:
             wget -q -O /tmp/pandoc.deb https://github.com/jgm/pandoc/releases/download/2.7.3/pandoc-2.7.3-1-amd64.deb
             dpkg -i /tmp/pandoc.deb
             rm /tmp/pandoc.deb
-      - persist_to_workspace:
-          root: *workspace_root
-          # todo - specify paths
-          paths: .
       # - run: 
       #     name: [todo] install kindle previewer
+
+jobs:
   build_install_cli:
     <<: *docker_image
     steps:
-      - *attach_workspace
+      - checkout
       - node/install:
           lts: true
       # - restore_cache:
@@ -66,7 +56,6 @@ jobs:
           command: cd packages/cli && npm install -g
       - persist_to_workspace:
           root: *workspace_root
-          # todo - specify paths
           paths: .
       # - save_cache:
       #     key: *npm_cache_key
@@ -80,6 +69,7 @@ jobs:
       - *attach_workspace
       - node/install:
           lts: true
+      - install_dependencies
       - run:
           name: Add test report directory
           command: mkdir -p ~/test-results
@@ -95,12 +85,7 @@ workflows:
   version: 2
   install_build_test:
     jobs:
-      - checkout
-      - install_dependencies
-      - build_install_cli:
-          requires:
-            - checkout
-            - install_dependencies
+      - build_install_cli
       - test:
           requires:
             - build_install_cli
