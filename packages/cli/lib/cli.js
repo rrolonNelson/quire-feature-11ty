@@ -66,7 +66,7 @@ export default class CLI extends EventEmitter {
    * commands available on their system to create a new project; this method
    * will emit a warning and exit with code 1 if `git` is not available.
    */
-  create(projectName) {
+  async create(projectName) {
     const rootDir = path.resolve(__dirname, "..", "bin");
     const starter= "default";
     const theme = "default";
@@ -76,53 +76,49 @@ export default class CLI extends EventEmitter {
     const projectDir = path.resolve(projectName);
     const projectThemeDir = path.resolve(projectName, "themes", theme);
 
-    return new Promise(async (resolve, reject) => {
-      if (commandMissing("git")) {
-        this.error("Please install Git before continuing.");
-      } else if (fs.existsSync(projectDir)) {
-        this.error(
-          `${projectDir} directory already exists, please select another project name.`
-        );
+    if (commandMissing("git")) {
+      this.error("Please install Git before continuing.");
+    } else if (fs.existsSync(projectDir)) {
+      this.error(
+        `${projectDir} directory already exists, please select another project name.`
+      );
+    } else {
+      this.notice("Creating project...");
+
+      // Copy Starter
+      this.notice(`Using starter: ${starter}`)
+      await copy(localStarterDir, projectDir);
+
+      // Copy Theme
+      this.notice(`Using theme: ${theme}`);
+      await copy(localThemeDir, projectThemeDir);
+      console.log("DONE: Copy theme dir");
+      // First Commit
+      this.notice("Initializing git in the new project directory...");
+      process.chdir(projectDir);
+
+      // Create empty IIIF image directory
+      fs.mkdirSync(path.join(localStarterDir, 'static', 'img', 'iiif'), { recursive: true });
+
+      spawnSync("git", ["init"]);
+      if (commandMissing("git-lfs")) {
+        this.warn(`Warning: Git LFS (Large File Storage) is required to publish repositories with files over 100 MB to GitHub. See documentation for more info and install instructions: https://quire.getty.edu/documentation/github. This message will not impact initialization of new project directory.`);
       } else {
-        this.notice("Creating project...");
-
-        // Copy Starter
-        this.notice(`Using starter: ${starter}`)
-        await copy(localStarterDir, projectDir);
-
-        // Copy Theme
-        this.notice(`Using theme: ${theme}`);
-        await copy(localThemeDir, projectThemeDir);
-        console.log("DONE: Copy theme dir");
-        // First Commit
-        this.notice("Initializing git in the new project directory...");
-        process.chdir(projectDir);
-
-        // Create empty IIIF image directory
-        fs.mkdirSync(path.join(localStarterDir, 'static', 'img', 'iiif'), { recursive: true });
-
-        spawnSync("git", ["init"]);
-        if (commandMissing("git-lfs")) {
-          this.warn(`Warning: Git LFS (Large File Storage) is required to publish repositories with files over 100 MB to GitHub. See documentation for more info and install instructions: https://quire.getty.edu/documentation/github. This message will not impact initialization of new project directory.`);
-        } else {
-          spawnSync(`git-lfs`, [`track`, `"static/downloads/**/*"`, `"static/img/**/*"`]);
-        }
-        this.notice("Committing starter files...");
-        spawnSync("git", ["add", "-A"]);
-        spawnSync("git", ["commit", "-m", `Add starter and theme to project`]);
-
-        // Install Dependencies
-        this.notice("Installing dependencies. This may take a minute...");
-        this.npmInstall(projectThemeDir);
-
-        this.confirm("Theme and dependencies successfully installed.");
-        this.notice(
-          "Run quire preview in your project folder to view changes locally."
-        );
-        resolve(true);
-        return true;
+        spawnSync(`git-lfs`, [`track`, `"static/downloads/**/*"`, `"static/img/**/*"`]);
       }
-    });
+      this.notice("Committing starter files...");
+      spawnSync("git", ["add", "-A"]);
+      spawnSync("git", ["commit", "-m", `Add starter and theme to project`]);
+
+      // Install Dependencies
+      this.notice("Installing dependencies. This may take a minute...");
+      this.npmInstall(projectThemeDir);
+
+      this.confirm("Theme and dependencies successfully installed.");
+      this.notice(
+        "Run quire preview in your project folder to view changes locally."
+      );
+    }
   }
   /**
    * @description Handler for Quire processes. Calls this.project[option], or logs error if option is invalid.
