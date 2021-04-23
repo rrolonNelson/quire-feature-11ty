@@ -146,7 +146,7 @@ describe("CLI", () => {
     timeout
   );
 
-  test(
+  xtest(
     "quire imageslice should create 'img/iiif/processed' image directory",
     async done => {
       await quire.process('iiif');

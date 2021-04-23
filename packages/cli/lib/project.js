@@ -192,6 +192,7 @@ class Project extends EventEmitter {
    * @description runs `npm install` in the theme subfolder
    */
   install() {
+    console.log('project.install()');
     return new Promise(resolve => {
       let theme = this.config.theme;
       let npmCmd = isWin32() ? "npm.cmd" : "npm";

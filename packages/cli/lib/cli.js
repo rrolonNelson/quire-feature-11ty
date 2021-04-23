@@ -93,7 +93,7 @@ export default class CLI extends EventEmitter {
         // Copy Theme
         this.notice(`Using theme: ${theme}`);
         await copy(localThemeDir, projectThemeDir);
-
+        console.log("DONE: Copy theme dir");
         // First Commit
         this.notice("Initializing git in the new project directory...");
         process.chdir(projectDir);
