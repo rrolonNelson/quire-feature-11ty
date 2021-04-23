@@ -80,7 +80,7 @@ jobs:
       - node/install
       - run:
           name: Jest Version
-          command: jest --version
+          command: cd packages/cli && jest --version
       - run:
           name: Node Version
           command: node --version
