@@ -55,7 +55,7 @@ describe("CLI", () => {
     timeout
   );
 
-  xtest(
+  test(
     "should successfully install node modules in a starter project theme",
     async done => {
       console.log("BEGIN: should successfully install node modules in a starter project theme");
