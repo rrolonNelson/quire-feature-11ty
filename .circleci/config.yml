@@ -79,6 +79,12 @@ jobs:
       - *attach_workspace
       - node/install
       - run:
+          name: Jest Version
+          command: jest --version
+      - run:
+          name: Node Version
+          command: node --version
+      - run:
           name: Add test report directory
           command: mkdir -p ~/test-results
       - run:
