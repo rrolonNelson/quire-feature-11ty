@@ -4,8 +4,8 @@
  * @param      {Object}  data    data
  * @return     {String}  HTML meta and link elements
  */
-module.exports = function(data) {
-  const { config, page, publication } = data
+module.exports = function({ globalData, page }) {
+  const { config, publication } = globalData
 
   const { description, identifier, promo_image, pub_date, pub_type } = publication
   const pageType = page && page.type

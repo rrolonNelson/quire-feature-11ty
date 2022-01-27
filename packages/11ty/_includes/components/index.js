@@ -27,10 +27,12 @@ module.exports = {
   contributorName: require('./contributor/name.js'),
   contributorPageLinks: require('./contributor/page-links.js'),
   contributorTitle: require('./contributor/title.js'),
+  dublinCore: require('./metaData/dublin-core.js'),
   head: require('./head.js'),
   icons: require('./icons.js'),
   iconscc: require('./icons-cc.js'),
   index: require('./index.js'),
+  jsonld: require('./metaData/jsonld.js'),
   ...licenseIcons,
   link: require('./link.js'),
   linkList: require('./linkList.js'),
@@ -40,8 +42,10 @@ module.exports = {
   menuList: require('./menu/list.js'),
   menuResources: require('./menu/resources.js'),
   nav: require('./nav-bar.js'),
+  opengraph: require('./metaData/opengraph.js'),
   pageButtons: require('./pageButtons.js'),
   pageTitle: require('./page-title.js'),
   scripts: require('./scripts.js'),
   siteTitle: require('./site-title.js'),
+  twitterCard: require('.metadata/twitter-card.js')
 }

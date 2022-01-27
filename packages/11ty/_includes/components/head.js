@@ -1,14 +1,19 @@
-const analytics = require('./analytics.js')
-const dublinCore = require('../page/dublin-core.js')
-const opengraph = require('../page/opengraph.js')
-const twitterCard = require('../page/twitter-card.js')
-const jsonld = require('../page/jsonld.js')
+/**
+ * @param      {Object}  context
+ * @param      {Object}  eleventyComputed
+ */
+module.exports = function({ eleventyConfig, globalData, page }, eleventyComputed) {
+  const analytics = eleventyConfig.getFilter('analytics')
+  const dublinCore = eleventyConfig.getFilter('dublinCore')
+  const jsonld = eleventyConfig.getFilter('jsonld')
+  const opengraph = eleventyConfig.getFilter('opengraph')
+  const twitterCard = eleventyConfig.getFilter('twitterCard')
 
-module.exports = function(eleventyConfig, globalData, data) {
   const { config, publication } = globalData
+  const { canonicalURL, title } = eleventyComputed
 
-  const title = data.title
-    ? `${data.title} | ${publication.title}`
+  const title = title
+    ? `${title} | ${publication.title}`
     : publication.title
 
   const description = publication.description.full || publication.description.one_line
@@ -40,20 +45,20 @@ module.exports = function(eleventyConfig, globalData, data) {
       <meta name="description" content="${description}">
       <meta name="keywords" content="${keywords}">
 
-      <link rel="canonical" href="${data.canonicalURL}">
+      <link rel="canonical" href="${canonicalURL}">
       <link rel="version-history" href="${publication.repositoryUrl}">
 
       ${publisherLinks}
 
       ${contributorLinks}
 
-      ${dublinCore(data)}
+      ${dublinCore()}
 
-      ${opengraph(data)}
+      ${opengraph()}
 
-      ${twitterCard(data)}
+      ${twitterCard(eleventyComputed)}
 
-      <script type="application/ld+json">${jsonld(data)}</script>
+      <script type="application/ld+json">${jsonld(eleventyComputed)}</script>
 
       <link rel="icon" href="/_assets/img/icons/favicon.ico" />
       <link rel="stylesheet" href="/_assets/styles/custom.css" />
@@ -61,7 +66,7 @@ module.exports = function(eleventyConfig, globalData, data) {
 
       <!-- {% render 'polyfills/template.html' %} -->
 
-      ${analytics(data)}
+      ${analytics()}
     </head>
   `
 }

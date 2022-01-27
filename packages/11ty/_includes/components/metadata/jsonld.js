@@ -3,11 +3,15 @@ const path = require('path')
 /**
  * Renders a JSON-LD representation of the page
  *
- * @param      {Object}  data    data
+ * @param      {Object}  context
+ * @param      {Object}  eleventyComputed
+ * 
  * @return     {String}  An HTML script element with JSON-LD
  */
-module.exports = function(data) {
-  const { config, contributor, imageDir, publication } = data
+module.exports = function({ globalData, page }, { imageDir }) {
+  const { contributor } = page
+  const { config, publication } = globalData
+
   const pageContributors = contributor ? contributor
     .map((contributor, { id }) => {
       contributor = id ? publication.contributor[id] : contributor

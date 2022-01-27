@@ -3,11 +3,11 @@ const path = require('path')
 /**
  * Renders <head> meta and link tags
  *
- * @param      {Object}  data    data
+ * @param      {Object}  context
  * @return     {String}  HTML meta and link elements
  */
-module.exports = function(data) {
-  const { config, publication } = data
+module.exports = function({ globalData }) {
+  const { config, publication } = globalData
 
   const links = [
     { rel: 'schema.dcterms', href: 'https://purl.org/dc/terms/' }

@@ -3,11 +3,13 @@ const path = require('path')
 /**
  * Renders <head> <meta> data tags for Open Graph protocol data
  *
- * @param      {Object}  data    data
+ * @param      {Object}  context
+ * @param      {Object}  eleventyComputed
  * @return     {String}  HTML meta and link elements
  */
-module.exports = function(data) {
-  const { abstract, config, cover, imageDir, layout, publication } = data
+module.exports = function({ globalData, page }, { imageDir }) {
+  const { config, publication } = globalData
+  const { abstract, cover, layout } = page
 
   const { description, promo_image } = publication
   const pageType = layout
@@ -52,4 +54,3 @@ module.exports = function(data) {
   ))
   return `${metaTags.join('\n')}`
 }
-
