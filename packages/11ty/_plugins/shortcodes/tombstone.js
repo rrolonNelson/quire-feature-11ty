@@ -8,6 +8,8 @@ module.exports = function(eleventyConfig) {
   const { config, objects } = eleventyConfig.globalData
 
   return function (pageObjects) {
+    if (!pageObjects) return ''
+
     const capitalize = eleventyConfig.getFilter('capitalize')
     const icon = eleventyConfig.getFilter('icon')
     const markdownify = eleventyConfig.getFilter('markdownify')
