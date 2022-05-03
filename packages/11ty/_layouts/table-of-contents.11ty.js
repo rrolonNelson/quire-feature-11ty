@@ -42,18 +42,14 @@ module.exports = class TableOfContents {
 
     let renderedSection
 
-    const defaultContentsItemParams = {
-      className,
-      config,
-      imageDir
-    }
+    const defaultContentsItemParams = { className, tocPages }
 
     const listItems = tocPages
       .filter((page) => !section || section && page.data.section === section)
       .map((page) => {
         let listItem = ''
-        if (page.data.layout === 'table-of-contents' && page.data.section !== renderedSection) {
-          renderedSection = page.data.section 
+        if (page.data.section && page.data.section !== renderedSection) {
+          renderedSection = page.data.section
 
           const subPages =
             config.params.tocType === 'full'
@@ -64,25 +60,42 @@ module.exports = class TableOfContents {
                       item.data.layout !== 'table-of-contents'
                   )
                   .map((item) => {
-                    if (page.fileSlug !== item.fileSlug)
-                      return `
-                        <li class="page-item">
-                          ${this.tableOfContentsItem({ ...defaultContentsItemParams, page: item })}
-                        </li>
-                      `
-                  })
-              : []
+                    return `
+                      <li class="page-item">
+                        ${this.tableOfContentsItem({ ...defaultContentsItemParams, ...item })}
+                      </li>
+                    `
+                  }).join('')
+                : null
+
+          let sectionHeadingProps = {}
+          if (page.data.layout === 'table-of-contents') {
+            sectionHeadingProps = page
+          } else {
+            /**
+             * Derive title from directory name
+             */
+            const titleParts = page.url.split('/')[1].split('-')
+            for (let i = 0; i < titleParts.length; i++) {
+                titleParts[i] = titleParts[i][0].toUpperCase() + titleParts[i].substr(1);
+            }
+            sectionHeadingProps = {
+              data: {
+                title: titleParts.join(' ')
+              }
+            }
+          }
 
           return `
             <li class="section-item">
-              ${this.tableOfContentsItem({ ...defaultContentsItemParams, page })}
-              <ul>${subPages.join('')}</ul>
+              ${this.tableOfContentsItem({ ...defaultContentsItemParams, ...sectionHeadingProps })}
+              <ul>${subPages}</ul>
             </li>
           `
         } else if (section || !page.data.section) {
           return `
             <li class="page-item">
-              ${this.tableOfContentsItem({ ...defaultContentsItemParams, page })}
+              ${this.tableOfContentsItem({ ...defaultContentsItemParams, ...page })}
             </li>
           `
         }

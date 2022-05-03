@@ -25,19 +25,16 @@ module.exports = function (eleventyConfig) {
   const { imageDir } = eleventyConfig.globalData.config.params
 
   return function (params) {
-    /**
-     * @todo move "pageLabelDivider" transfomration into a shortcode and remove "config" from params
-     */
-    const { className, config, page } = params
-
     const {
       abstract,
+      className,
       data,
       figure: pageFigure,
       layout,
       summary,
+      tocPages,
       url
-    } = page
+    } = params
 
     const {
       contributor: pageContributors,
@@ -52,8 +49,7 @@ module.exports = function (eleventyConfig) {
     const brief = className.includes('brief')
     const grid = className.includes('grid')
 
-    // const itemClassName = weight < pageOne.data.weight ? "frontmatter-page" : ""
-    const itemClassName = ''
+    const itemClassName = weight < tocPages[0].data.weight ? "frontmatter-page" : ""
     const pageContributorList = contributorList({ contributors: pageContributors })
     const pageContributorsElement = pageContributorList
       ? `<span class="contributor"> — ${pageContributorList}</span>`
@@ -65,7 +61,7 @@ module.exports = function (eleventyConfig) {
     } else if (brief) {
       pageTitleElement += title
     } else {
-      const { label, subtitle, title } = page.data
+      const { label, subtitle, title } = data
       pageTitleElement += oneLine`${pageTitle({ label, subtitle, title })}${pageContributorsElement}`
     }
     const arrowIcon = `<span class="arrow remove-from-epub">&nbsp${icon({ type: 'arrow-forward', description: '' })}</span>`
@@ -77,6 +73,10 @@ module.exports = function (eleventyConfig) {
             {{ markdownify(abstract) | replaceRE "</?a(|\\s*[^>]+)>" "" | strip_html }}
         </div>`
         : ''
+
+
+    const openingAnchorTag = url ? `<a href="${urlFilter(url)}" class="${itemClassName}">` : ''
+    const closingAnchorTag = url ? `</a>` : ''
 
     let mainElement
 
@@ -104,26 +104,27 @@ module.exports = function (eleventyConfig) {
           break
         default:
           imageElement = ''
+          break;
       }
       mainElement = `
-        <a href="${urlFilter(url)}" class="${itemClassName}">
+        ${openingAnchorTag}
           <div class="card ${imageAttribute} ${slugPageAttribute}">
             ${imageElement}
             <div class="card-content">
               <div class="title">
                 ${markdownify(pageTitleElement)}
-                ${arrowIcon}
+                ${url ? arrowIcon : ''}
               </div>
             </div>
           </div>
-        </a>`
+        ${closingAnchorTag}`
     } else {
       mainElement = `
         <div class="title">
-          <a href="${urlFilter(url)}" class="${itemClassName}">
+          ${openingAnchorTag}
             ${markdownify(pageTitleElement)}
-            ${arrowIcon}
-          </a>
+            ${url ? arrowIcon : ''}
+          ${closingAnchorTag}
         </div>
         ${abstractText}
       `
