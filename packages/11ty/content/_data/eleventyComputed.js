@@ -77,11 +77,15 @@ module.exports = {
         return objectData
       })
   },
+  menuPages: ({ pages }) => {
+    if (!pages) return [];
+    return pages.filter(({ data }) => data.menu !== false)
+  },
   pages: ({ collections, config }) => {
     if (!collections.all) return [];
     return collections.all
       .filter(({ data }) => {
-        const { online, epub, menu, pdf, type } = data
+        const { online, epub, pdf, type } = data
         return (
           online !== false &&
           !(config.params.pdf && pdf === false) &&
@@ -100,5 +104,9 @@ module.exports = {
       nextPage: pages[currentPageIndex + 1],
       previousPage: pages[currentPageIndex - 1]
     }
+  },
+  tocPages: ({ page, pages }) => {
+    if (!page || !pages) return [];
+    return pages.filter(({ data, url }) => data.toc !== false && page.url !== url)
   }
 }

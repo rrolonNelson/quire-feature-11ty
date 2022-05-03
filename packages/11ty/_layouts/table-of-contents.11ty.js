@@ -20,10 +20,9 @@ module.exports = class TableOfContents {
       config,
       content,
       imageDir,
-      page: tocPage,
-      pages,
       pagination,
-      section
+      section,
+      tocPages
     } = data
 
     const contentElement = content
@@ -49,12 +48,8 @@ module.exports = class TableOfContents {
       imageDir
     }
 
-    const listItems = pages
-      .filter((page) => 
-        page.url !== tocPage.url
-        && (!section || section && page.data.section === section)
-        && page.data.type !== 'data' 
-        && page.data.toc !== false)
+    const listItems = tocPages
+      .filter((page) => !section || section && page.data.section === section)
       .map((page) => {
         let listItem = ''
         if (page.data.layout === 'table-of-contents' && page.data.section !== renderedSection) {
@@ -62,7 +57,7 @@ module.exports = class TableOfContents {
 
           const subPages =
             config.params.tocType === 'full'
-              ? pages
+              ? tocPages
                   .filter(
                     (item) =>
                       item.data.section === page.data.section &&
@@ -94,7 +89,7 @@ module.exports = class TableOfContents {
       })
 
     return this.renderTemplate(
-      `<div class="{% pageClass pages=pages, pagination=pagination %} quire-contents" id="main" role="main">
+      `<div class="{% pageClass pages=tocPages, pagination=pagination %} quire-contents" id="main" role="main">
         {% pageHeader
           contributor=contributor,
           contributor_as_it_appears=contributor_as_it_appears,
