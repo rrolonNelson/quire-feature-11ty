@@ -42,50 +42,28 @@ module.exports = function(eleventyConfig, options) {
     .use(footnotePlugin)
 
   /**
-   * Configure automatic link detection
+   * Set recognition options for links without a schema
    * @see https://github.com/markdown-it/linkify-it#api
    */
   markdownLibrary.linkify.set({ fuzzyLink: false })
 
   /**
-   * Override the default linkify normalizer
-   * @see https://github.com/markdown-it/linkify-it
-   *
-   * Insert word break opportunites, HTML <wbr> elements, into link text URL strings
-   * @see https://html.spec.whatwg.org/multipage/text-level-semantics.html#the-wbr-element
-   *
-   * Based on the work of Reuben L. Lillie
-   *
-   * The Chicago Manual of Style recommends URLs be broken onto multiple lines
-   * based on punctuation in the following places:
-   * - After a colon (:) or a double slash (//)
-   * - Before a single slash (/), a tilde (~), a period (.), a comma (,),
-   *   a hyphen (-), an underline (aka an underscore, _), a question mark (?),
-   *   a number sign (#), or a percent symbol (%).
-   * - Before or after an equals sign (=) or an ampersand (&)
-   *
-   * @see https://www.chicagomanualofstyle.org/book/ed17/part3/ch14/psec018.html
-   *
+   * Remember old renderer, if overridden, or proxy to default renderer
    */
-  markdownLibrary.linkify.normalize = function (match) {
-    const insertWordBreaks = (string) => {
-      const [ schema, url ] = string.split('//')
-      return `${schema}<wbr>//<wbr>${url}` + url
-        // after a colon
-        .replace(/(?<after>:)/giu, '$1<wbr>')
-        // before a single slash, tilde, period, comma, hyphen, underline, question mark, number sign, or percent symbol
-        .replace(/(?<before>[/~.,\-_?#%])/giu, '<wbr>$1')
-        // before and after an equal sign or an ampersand
-        .replace(/(?<beforeAndAfter>[=&])/giu, '<wbr>$1<wbr>')
+  const defaultRender = markdownLibrary.renderer.rules.link_open ||
+    function (tokens, idx, options, env, self) {
+      return self.renderToken(tokens, idx, options)
     }
 
-    if (!match.schema) {
-      match.text = insertWordBreaks(`https://${match.url}`)
+  /**
+   * Render external links so that they open in a new tab
+   */
+  markdownLibrary.renderer.rules.link_open = (tokens, idx, options, env, self) => {
+    const href = tokens[idx].attrGet('href')
+    if (href.startsWith('http')) {
+      tokens[idx].attrSet('target', '_blank')
     }
-
-    if (['https:', 'http:', 'ftp:', '//'].includes(match.schema)) {
-      match.text = insertWordBreaks(match.url)
-    }
+    return defaultRender(tokens, idx, options, env, self)
   }
 
   /**
