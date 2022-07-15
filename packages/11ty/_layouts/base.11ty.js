@@ -7,7 +7,7 @@ const { html } = require('~lib/common-tags')
  * @return     {Function}  Template render function
  */
 module.exports = function(data) {
-  const { collections, content, pageData, publication } = data
+  const { class: className, collections, content, pageData, publication } = data
   const { outputPath } = pageData || {}
 
   return this.renderTemplate(
@@ -29,7 +29,7 @@ module.exports = function(data) {
             </div>
             <div class="quire__primary" id="{{ section }}">
               ${this.navigation(data)}
-              <section data-output-path="${outputPath}">
+              <section class="${className}" data-output-path="${outputPath}">
                 ${content}
               </section>
             </div>
